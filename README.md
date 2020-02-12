@@ -1,4 +1,4 @@
-# midterm-project-401 (back-end)
+# jordan-tourism-back-end-401
 
 ## Group 4 Members:
 
