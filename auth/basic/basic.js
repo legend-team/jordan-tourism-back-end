@@ -29,14 +29,13 @@ userSchema.authenticateUser(name , pass)
         }
         console.log('user.id',user.id)
         req.token = jwt.sign(user,'ser123');
-        console.log('req.token',req.token)
+        console.log('req.token',req.token);
+        next();  
 })
 .catch(err =>{
-    next('Invalid user error',err);
+    next('Invalid user error',err); 
     // console.error()
 })
-
-
 
 
 

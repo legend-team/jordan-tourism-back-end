@@ -31,6 +31,9 @@ User.statics.authenticateUser = async function(user , pass){
         console.log('this.pass' , pass)
         let valid = bcrypt.compare(pass,foundUser.pass);
         return valid ? foundUser : Promise.reject();
+    }else{
+        Promise.reject();
+
     }
 }
 
