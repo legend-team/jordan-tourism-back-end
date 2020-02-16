@@ -17,7 +17,6 @@ city.virtual('achistoricalPlaces', {
 })
 
 city.pre('findOne', function(){
-    console.log('8888888888888');
     
     try{
         this.populate('achistoricalPlaces');
