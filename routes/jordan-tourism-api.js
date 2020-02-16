@@ -81,12 +81,12 @@ user.save()
 })
 .then((token)=>{
 console.log('sign-up token :',token);
-res.status(200).send('sucsesfuly sign-up ')
+res.status(200).send('successfully sign-up ')
 })
 }
 function signin (req,res,next){
     console.log(req.token);
-    res.status(200).send('sucsesfuly sign-in');
+    res.status(200).send('successfully sign-in');
 
 }
 
