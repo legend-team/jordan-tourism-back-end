@@ -1,28 +1,36 @@
-'use strict'
+'use strict '
+
+
 const mongoose = require('mongoose');
+require('./city_schema.js');
 
 
-const historical_place = mongoose.Schema({
+const historicalPlace = mongoose.Schema({
     historical_name:{type:String,required:true},
     image_link :{type:String,required : true},
     brief_info:{type:String,required:true},
-    name:{type:String,required:true}
-}, {toObject: {virtuals: true}, toJSON: {vertuals: true}
-})
+    cityName:{type:String,required:true}
+// }, { toObject: { virtuals: true}, toJSON: { virtuals: true }
+});
 
-// historical_place.virtual('historicalPlaces', {
+// historicalPlace.virtual('actualCity', {
 //     ref: 'city',
-//     localField: 'historical_name',
+//     localField: 'cityName',
 //     foreignField: 'name',
 //     justOne: false
 // })
 
-// historical_place.pre('findOne', function(){
+// historicalPlace.pre('findOne', function(){
+//     console.log('jjjjjjjjjjjjj');
+    
 //     try{
-//         this.population('historicalPlaces');
+//         this.populate('actualCity');
 //     }catch(err){
 //         console.error(err)
 //     }
 // })
 
-module.exports = mongoose.model('historical_place',historical_place)
+module.exports = mongoose.model('historicalPlace',historicalPlace)
+
+
+

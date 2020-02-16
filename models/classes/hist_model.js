@@ -1,12 +1,12 @@
 'use strict';
 
+const schema = require('../schema/hist_place_schema.js')
 const Model = require('../Model.js');
 
-const schema = require('../schema/hist_place_schema.js')
 
 class Historical extends Model {
-    constructor(){
-        super(schema)
-    }
+  
 }
-module.exports = Historical
+module.exports = new Historical(schema)
+
+
