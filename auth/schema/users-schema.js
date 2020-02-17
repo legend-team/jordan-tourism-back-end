@@ -10,7 +10,7 @@ const User = mongoose.Schema({
     name: { type: String, required: true },
     pass: { type: String, required: true },
     email: { type: String },
-    role: { type: String, required: true, default: 'user', enum: ['user', 'editor', 'admin'] }
+    role: { type: String, required: true, default: 'user', enum: ['user', 'admin'] }
 });
 
 User.pre('save', async function () {
@@ -70,7 +70,6 @@ User.statics.bearerAuth = async function (token) {
 
 User.statics.capabilityChecker = (capability, role) => {
     let admin = ['read', 'create', 'update', 'delete'];
-    let editor = ['read', 'create', 'update'];
     let user = ['read'];
 
     if (role === 'admin') {
@@ -80,15 +79,6 @@ User.statics.capabilityChecker = (capability, role) => {
             }
         }
     }
-
-    if (role === 'editor') {
-        for (let i = 0; i < editor.length; i++) {
-            if (editor[i] === capability) {
-                return true;
-            }
-        }
-    }
-
     if (role === 'user') {
         for (let i = 0; i < user.length; i++) {
             if (user[i] === capability) {

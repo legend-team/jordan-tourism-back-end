@@ -1,15 +1,18 @@
 'use strict ';
 
-const joTourism = require('express').Router();
+
 const express = require('express')
+const jwt =require('jsonwebtoken');
+const joTourism = require('express').Router();
 const historical = require('../models/classes/hist_model.js');
 const city = require('../models/classes/city_model.js');
 const User = require('../auth/schema/users-schema.js')
-const jwt =require('jsonwebtoken');
 const bearerAuth = require('../auth/bearer/bearer.js');
 const acl = require('../auth/acl/acl.js');
 
 const basicMiddleware = require('../auth/basic/basic.js');
+
+
 
 function dynamicModel(req, res, next) {
     let cities = ['ajloun', 'irbed', 'jarash','amman','zarqa','alkarak','alsalt']
@@ -51,20 +54,20 @@ joTourism.use(express.static('/public'));
 
 
 
-joTourism.get('/', getHitsPlaceAtAll) //// all citeis w/o virtuals
+joTourism.get('/', bearerAuth, acl('read'), getHitsPlaceAtAll) //// all citeis w/o virtuals
 // joTourism.get('/site', getHitsSiteAtAll) //// all sites
 
-joTourism.get('/:model/:id', getHitsPlace) /// one city with sites 
-joTourism.get('/:model/:id/:hist/:id', getHitsSite) // one site
+joTourism.get('/:model/:id',  bearerAuth, acl('read'), getHitsPlace) /// one city with sites for all
+joTourism.get('/:model/:id/:hist/:id',  bearerAuth, acl('read'), getHitsSite) // one site for all
 
-// joTourism.post('/', postHistPlaces) /// add a city
-// joTourism.post('/site', postHistSite) /// add a site
+joTourism.post('/', bearerAuth, acl('create') ,postHistPlaces) /// add a city for admin
+joTourism.post('/site', bearerAuth, acl('create') , postHistSite) /// add a site for admin
 
-joTourism.put('/:id', updateHitsPlace) // update a city
-joTourism.put('/site/:id', updateHitsSite) // update a site
+joTourism.put('/:id', bearerAuth, acl('update'),updateHitsPlace) // update a city for admin
+joTourism.put('/site/:id', bearerAuth, acl('update'), updateHitsSite) // update a site for admin
 
-joTourism.delete('/:id', deleteHitsPlace) // delete a city
-joTourism.delete('/site/:id', deleteHitsSite) // delete a site
+joTourism.delete('/:id',  bearerAuth, acl('delete'), deleteHitsPlace) // delete a city for admin
+joTourism.delete('/site/:id',  bearerAuth, acl('delete'), deleteHitsSite) // delete a site for admin
 
 // signin /signup routes:
 joTourism.post('/signup',signup);
@@ -75,24 +78,24 @@ joTourism.get('/user', bearerAuth, (req,res) => {
     res.status(200).json(req.user);
 })
 
-joTourism.get('/create', bearerAuth, acl('create'), (req, res) => {
-    res.status(200).send('U can create');
-    // res.status(200).redirect('/')
-})
+// joTourism.get('/create', bearerAuth, acl('create'), (req, res) => {
+//     res.status(200).send('U can create');
+//     // res.status(200).redirect('/')
+// })
 
-joTourism.get('/update', bearerAuth, acl('update'), (req, res) => {
-    res.status(200).send('U can update');
-    // res.status(200).redirect('/index.html')
+// joTourism.get('/update', bearerAuth, acl('update'), (req, res) => {
+//     res.status(200).send('U can update');
+//     // res.status(200).redirect('/index.html')
 
-})
+// })
 
-joTourism.get('/delete', bearerAuth, acl('delete'), (req, res) => {
-    res.status(200).send('U can delete');
-})
+// joTourism.get('/delete', bearerAuth, acl('delete'), (req, res) => {
+//     res.status(200).send('U can delete');
+// })
 
-joTourism.get('/read', bearerAuth, acl('read'), (req, res) => {
-    res.status(200).send('U can read');
-})
+// joTourism.get('/read', bearerAuth, acl('read'), (req, res) => {
+//     res.status(200).send('U can read');
+// })
 
 // signin /signup functions:
 function signup(req,res,next){
@@ -125,12 +128,12 @@ function getHitsPlaceAtAll(req, res, next) {
         }).catch()
 }
 
-function getHitsSiteAtAll(req, res, next) {
-    historical.get()
-        .then(output => {
-            res.status(200).json(output)
-        }).catch()
-}
+// function getHitsSiteAtAll(req, res, next) {
+//     historical.get()
+//         .then(output => {
+//             res.status(200).json(output)
+//         }).catch()
+// }
 
 function getHitsPlace(req, res, next) {
     console.log('rrrrrr', req.model);
