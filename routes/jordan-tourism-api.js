@@ -1,7 +1,7 @@
 'use strict ';
 
 const joTourism = require('express').Router();
-
+const express = require('express')
 const historical = require('../models/classes/hist_model.js');
 const city = require('../models/classes/city_model.js');
 const User = require('../auth/schema/users-schema.js')
@@ -47,6 +47,7 @@ function dynamicSites(req, res, next) {
 
 joTourism.param('model', dynamicModel)
 joTourism.param('hist', dynamicSites)
+joTourism.use(express.static('/public'));
 
 
 
@@ -69,17 +70,20 @@ joTourism.delete('/site/:id', deleteHitsSite) // delete a site
 joTourism.post('/signup',signup);
 joTourism.post('/signin',basicMiddleware,signin);
 
-joTourism.get('/test', bearerAuth, (req,res) => {
+joTourism.get('/user', bearerAuth, (req,res) => {
     // console.log('rrrr', req.user);    
     res.status(200).json(req.user);
 })
 
 joTourism.get('/create', bearerAuth, acl('create'), (req, res) => {
     res.status(200).send('U can create');
+    // res.status(200).redirect('/')
 })
 
 joTourism.get('/update', bearerAuth, acl('update'), (req, res) => {
     res.status(200).send('U can update');
+    // res.status(200).redirect('/index.html')
+
 })
 
 joTourism.get('/delete', bearerAuth, acl('delete'), (req, res) => {
