@@ -6,6 +6,7 @@ const historical = require('../models/classes/hist_model.js');
 const city = require('../models/classes/city_model.js');
 const User = require('../auth/schema/users-schema.js')
 const jwt =require('jsonwebtoken');
+const bearerAuth = require('../auth/bearer/bearer.js');
 
 const basicMiddleware = require('../auth/basic/basic.js');
 
@@ -66,6 +67,12 @@ joTourism.delete('/site/:id', deleteHitsSite) // delete a site
 // signin /signup routes:
 joTourism.post('/signup',signup);
 joTourism.post('/signin',basicMiddleware,signin);
+
+joTourism.get('/test', bearerAuth, (req,res) => {
+    console.log('rrrr', req.user);
+    
+    res.status(200).json(req.user);
+})
 
 
 // signin /signup functions:

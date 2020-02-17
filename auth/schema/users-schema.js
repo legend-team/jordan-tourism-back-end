@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt =require('jsonwebtoken');
+
 
 
 const User = mongoose.Schema({
@@ -13,8 +15,7 @@ const User = mongoose.Schema({
 User.pre('save',async function(){
     try{
         this.pass = await bcrypt.hash(this.pass,5);
-        // console.log('this.pass hashed:',this.pass)
-    
+        // console.log('this.pass hashed:',this.pass)    
     }
     catch(e){
         return Promise.reject();
@@ -37,4 +38,31 @@ User.statics.authenticateUser = async function(user , pass){
     }
 }
 
+User.statics.bearerAuth = async function (token){
+    // try {
+    //     let tokenObj = await jwt.verify(token, 'ser123');
+    //     return this.findOne({id:tokenObj._id});
+    // } catch(err){
+    //     return Promise.reject();
+    // }
+    console.log('iiiiii', token);
+    
+    try {
+    
+        let tokenObj = jwt.verify(token, 'ser123');
+        console.log('qqqqqqqqqqq', tokenObj);
+        
+        
+        if (tokenObj) {
+            console.log('rrrrrrrrr', Promise.resolve(tokenObj));
+        // return this.find(tokenObj);
+
+          return Promise.resolve(tokenObj);
+        } else {
+          return Promise.reject();
+        }
+      } catch (err) {
+        return Promise.reject();
+      }
+}
 module.exports = mongoose.model('User',User);
