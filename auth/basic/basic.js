@@ -27,7 +27,8 @@ userSchema.authenticateUser(name , pass)
     let user = {
         id: validUser._id,
         username : validUser.name,
-        password : validUser.pass
+        password : validUser.pass,
+        role : validUser.role
         }
         console.log('user.id',user.id)
         req.token = jwt.sign(user,'ser123');

@@ -7,6 +7,7 @@ const city = require('../models/classes/city_model.js');
 const User = require('../auth/schema/users-schema.js')
 const jwt =require('jsonwebtoken');
 const bearerAuth = require('../auth/bearer/bearer.js');
+const acl = require('../auth/acl/acl.js');
 
 const basicMiddleware = require('../auth/basic/basic.js');
 
@@ -69,11 +70,25 @@ joTourism.post('/signup',signup);
 joTourism.post('/signin',basicMiddleware,signin);
 
 joTourism.get('/test', bearerAuth, (req,res) => {
-    console.log('rrrr', req.user);
-    
+    // console.log('rrrr', req.user);    
     res.status(200).json(req.user);
 })
 
+joTourism.get('/create', bearerAuth, acl('create'), (req, res) => {
+    res.status(200).send('U can create');
+})
+
+joTourism.get('/update', bearerAuth, acl('update'), (req, res) => {
+    res.status(200).send('U can update');
+})
+
+joTourism.get('/delete', bearerAuth, acl('delete'), (req, res) => {
+    res.status(200).send('U can delete');
+})
+
+joTourism.get('/read', bearerAuth, acl('read'), (req, res) => {
+    res.status(200).send('U can read');
+})
 
 // signin /signup functions:
 function signup(req,res,next){
