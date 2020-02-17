@@ -5,18 +5,16 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-
 const User = mongoose.Schema({
     name: { type: String, required: true },
     pass: { type: String, required: true },
     email: { type: String },
-    role: { type: String, required: true, default: 'user', enum: ['user', 'admin'] }
+    role: { type: String, default: 'user', enum: ['user', 'admin'] }
 });
 
 User.pre('save', async function () {
     try {
         this.pass = await bcrypt.hash(this.pass, 5);
-        // console.log('this.pass hashed:',this.pass)    
     }
     catch (e) {
         return Promise.reject();
@@ -40,24 +38,9 @@ User.statics.authenticateUser = async function (user, pass) {
 }
 
 User.statics.bearerAuth = async function (token) {
-    // try {
-    //     let tokenObj = await jwt.verify(token, 'ser123');
-    //     return this.findOne({id:tokenObj._id});
-    // } catch(err){
-    //     return Promise.reject();
-    // }
-    console.log('iiiiii', token);
-
     try {
-
         let tokenObj = jwt.verify(token, 'ser123');
-        console.log('qqqqqqqqqqq', tokenObj);
-
-
         if (tokenObj) {
-            console.log('rrrrrrrrr', Promise.resolve(tokenObj));
-            // return this.find(tokenObj);
-
             return Promise.resolve(tokenObj);
         } else {
             return Promise.reject();
@@ -69,8 +52,8 @@ User.statics.bearerAuth = async function (token) {
 
 
 User.statics.capabilityChecker = (capability, role) => {
-    let admin = ['read', 'create', 'update', 'delete'];
-    let user = ['read'];
+    let admin = ['read', 'create', 'update', 'delete', 'review'];
+    let user = ['read', 'review'];
 
     if (role === 'admin') {
         for (let i = 0; i < admin.length; i++) {

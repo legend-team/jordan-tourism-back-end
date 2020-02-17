@@ -1,27 +1,38 @@
 'use strict ';
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
 
-
-const express = require('express')
-const jwt =require('jsonwebtoken');
+/**
+ * DE
+ */
+const express = require('express');
+const jwt = require('jsonwebtoken');
 const joTourism = require('express').Router();
-const historical = require('../models/classes/hist_model.js');
-const city = require('../models/classes/city_model.js');
-const User = require('../auth/schema/users-schema.js')
-const bearerAuth = require('../auth/bearer/bearer.js');
+
+
 const acl = require('../auth/acl/acl.js');
-
+const User = require('../auth/schema/users-schema.js');
+const bearerAuth = require('../auth/bearer/bearer.js');
+const city = require('../models/classes/city_model.js');
 const basicMiddleware = require('../auth/basic/basic.js');
+const review = require('../models/classes/review_class.js');
+const historical = require('../models/classes/hist_model.js');
 
 
+/**
+ * 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next 
+ */
+function dynamicCeties(req, res, next) {
+    let cities = ['ajloun', 'irbed', 'jarash', 'amman', 'zarqa', 'alkarak', 'alsalt']
 
-function dynamicModel(req, res, next) {
-    let cities = ['ajloun', 'irbed', 'jarash','amman','zarqa','alkarak','alsalt']
-
-    let model = req.params.model;
+    let city = req.params.city;
     for (let i = 0; i < cities.length; i++) {
-        console.log('eeeeeeeeeee', model);
-        if (model === cities[i]) {
-            req.model = city;
+        // console.log('eeeeeeeeeee', model);
+        if (city === cities[i]) {
+            req.city = city;
             next();
             return;
         }
@@ -30,10 +41,15 @@ function dynamicModel(req, res, next) {
 
 }
 
-
+/**
+ * dynamicSites function : 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next 
+ */
 function dynamicSites(req, res, next) {
 
-    let sites = ['ummqais', 'southerntheate', 'bella', 'streetcolumns' , 'nymphsway', 'artemis','kerakmoabcastle','َkarakcastl']
+    let sites = ['ummqais', 'southerntheate', 'bella', 'streetcolumns', 'nymphsway', 'artemis', 'kerakmoabcastle', 'َkarakcastl']
 
     let hist = req.params.hist;
     for (let i = 0; i < sites.length; i++) {
@@ -45,160 +61,153 @@ function dynamicSites(req, res, next) {
         }
     }
     next('invalid route')
-    
+
 }
 
-joTourism.param('model', dynamicModel)
+
+/**
+ * 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next 
+ */
+function getModel(req, res, next) {
+    let model = req.params.model; // dynamic model
+    switch (model) {
+        case 'cities':
+            req.model = city;
+            next();
+            return;
+        case 'sites':
+            req.model = historical;
+            // products and categories come from the requires up above
+            next();
+            return;
+        case 'reviews':
+            req.model = review;
+            next();
+            return;
+        default:
+            next('model not found'); // if we pass smth in the next, if u wrote ur error middleware correctly, it moves it to the error hanling 
+            return;
+    }
+}
+
+
+joTourism.param('model', getModel)
+joTourism.param('city', dynamicCeties)
 joTourism.param('hist', dynamicSites)
 joTourism.use(express.static('/public'));
 
 
 
-joTourism.get('/', bearerAuth, acl('read'), getHitsPlaceAtAll) //// all citeis w/o virtuals
-// joTourism.get('/site', getHitsSiteAtAll) //// all sites
+joTourism.get('/:model', getHitsPlaceAtAll) //// all citeis w/o virtuals
+joTourism.get('/:model', getHitsPlaceAtAll) //// all sites
 
-joTourism.get('/:model/:id',  bearerAuth, acl('read'), getHitsPlace) /// one city with sites for all
-joTourism.get('/:model/:id/:hist/:id',  bearerAuth, acl('read'), getHitsSite) // one site for all
 
-joTourism.post('/', bearerAuth, acl('create') ,postHistPlaces) /// add a city for admin
-joTourism.post('/site', bearerAuth, acl('create') , postHistSite) /// add a site for admin
+joTourism.get('/:model/:city/:id', getHitsPlace) /// one city with sites for all
+joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace) // one site for all``
 
-joTourism.put('/:id', bearerAuth, acl('update'),updateHitsPlace) // update a city for admin
-joTourism.put('/site/:id', bearerAuth, acl('update'), updateHitsSite) // update a site for admin
 
-joTourism.delete('/:id',  bearerAuth, acl('delete'), deleteHitsPlace) // delete a city for admin
-joTourism.delete('/site/:id',  bearerAuth, acl('delete'), deleteHitsSite) // delete a site for admin
+joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces) /// add a city for admin
+joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces) /// add a site for admin
+joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces) /// add a review for admin and user
+
+
+joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace) // update a city for admin
+joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace) // update a site for admin
+
+
+joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace) // delete a city for admin
+joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace) // delete a site for admin
+
 
 // signin /signup routes:
-joTourism.post('/signup',signup);
-joTourism.post('/signin',basicMiddleware,signin);
-
-joTourism.get('/user', bearerAuth, (req,res) => {
-    // console.log('rrrr', req.user);    
+joTourism.post('/signup', signup);
+joTourism.post('/signin', basicMiddleware, signin);
+joTourism.get('/user', bearerAuth, (req, res) => {
     res.status(200).json(req.user);
 })
 
-// joTourism.get('/create', bearerAuth, acl('create'), (req, res) => {
-//     res.status(200).send('U can create');
-//     // res.status(200).redirect('/')
-// })
 
-// joTourism.get('/update', bearerAuth, acl('update'), (req, res) => {
-//     res.status(200).send('U can update');
-//     // res.status(200).redirect('/index.html')
-
-// })
-
-// joTourism.get('/delete', bearerAuth, acl('delete'), (req, res) => {
-//     res.status(200).send('U can delete');
-// })
-
-// joTourism.get('/read', bearerAuth, acl('read'), (req, res) => {
-//     res.status(200).send('U can read');
-// })
 
 // signin /signup functions:
-function signup(req,res,next){
-let user = new User(req.body);    
-user.save()
-.then((dbuser)=>{
-    console.log('hashedpass inside sign up',dbuser.pass)
-    let user = {
-    id: dbuser._id,
-    }
-    return jwt.sign(user,'ser123') 
-})
-.then((token)=>{
-console.log('sign-up token :',token);
-res.status(200).send('successfully sign-up ')
-})
+function signup(req, res, next) {
+    let user = new User(req.body);
+    user.save()
+        .then((dbuser) => {
+            console.log('hashedpass inside sign up', dbuser.pass)
+            let user = {
+                id: dbuser._id,
+            }
+            return jwt.sign(user, 'ser123')
+        })
+        .then((token) => {
+            console.log('sign-up token :', token);
+            res.status(200).send('successfully sign-up ')
+        })
 }
-function signin (req,res,next){
+
+
+
+function signin(req, res, next) {
     console.log(req.token);
-    res.status(200).send('successfully sign-in');
+    // res.status(200).send('successfully sign-in, your token is:  ')
+    res.status(200).json(req.token)
 
 }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+
+
 
 
 //CRUD functions
 function getHitsPlaceAtAll(req, res, next) {
-    city.get()
+    req.model.get()
         .then(output => {
             res.status(200).json(output)
         }).catch()
 }
 
-// function getHitsSiteAtAll(req, res, next) {
-//     historical.get()
-//         .then(output => {
-//             res.status(200).json(output)
-//         }).catch()
-// }
 
 function getHitsPlace(req, res, next) {
     console.log('rrrrrr', req.model);
 
-    city.get(req.params.id)
+    req.model.get(req.params.id)
         .then(output => {
             res.status(200).json(output)
         }).catch(next)
 }
 
-function getHitsSite(req, res, next) {
-    historical.get(req.params.id)
-        .then(output => {
-            res.status(200).json(output)
-        })
-        .catch(e => console.error(e));
-
-}
-
 
 function postHistPlaces(req, res, next) {
-    city.create(req.body)
+    req.model.create(req.body)
         .then(data => {
             res.status(201).json(data);
         })
         .catch(next)
 }
 
-function postHistSite(req, res, next) {
-    historical.create(req.body)
-        .then(data => {
-            res.status(201).json(data);
-        })
-        .catch(next)
-}
 
 function updateHitsPlace(req, res, next) {
-    city.update(req.params.id, req.body)
+    req.model.update(req.params.id, req.body)
         .then(data => {
             res.status(200).json(data)
         }).catch(next);
 }
 
-function updateHitsSite(req, res, next) {
-    historical.update(req.params.id, req.body)
-        .then(data => {
-            res.status(200).json(data)
-        }).catch(next);
-}
 
 function deleteHitsPlace(req, res, next) {
     let message = 'deleted';
-    city.delete(req.params.id)
+    req.model.delete(req.params.id)
         .then(() => {
             res.status(200).json(message)
         }).catch(next);
 }
-
-function deleteHitsSite(req, res, next) {
-    let message = 'deleted';
-    historical.delete(req.params.id)
-        .then(() => {
-            res.status(200).json(message)
-        }).catch(next);
-}
-
 
 module.exports = joTourism;

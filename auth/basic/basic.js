@@ -16,11 +16,8 @@ function basicMiddleware(req,res,next){
     }
 
 let basicCode = req.headers.authorization.split(' ').pop();
-console.log('basicCode',basicCode);
 
-// console.log('basicCode',base64.decode(basicCode).split(':') );
 let [name, pass] = base64.decode(basicCode).split(':');
-// let auth = { name , pass}
 userSchema.authenticateUser(name , pass)
 .then(validUser=>{
     console.log('validUser',validUser)
