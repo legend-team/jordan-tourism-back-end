@@ -127,39 +127,35 @@ joTourism.param('hist', dynamicSites)
 /**
  * show all the cities or all the sites for all visitors
  */
-joTourism.get('/:model', getHitsPlaceAtAll) 
+joTourism.get('/:model', getHitsPlaceAtAll)
 
 /**
  * show one city or one site based on the name of the city and the id for all visitors
  */
 joTourism.get('/:model/:city/:id', getHitsPlace)
-joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace) 
+joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace)
 
 
 /**
  * to post a new city or site by the admin
  */
-joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces) 
+joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces)
 
 /**
  * to post a new review by admin or user
  */
-joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces) 
+joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces)
 
 /**
  * to update a city or site by admin
  */
-joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace) 
+joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace)
 
 
 /**
  * to delete city or site by admin
  */
-joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace) 
-
-
-
-
+joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace);
 
 
 /**
@@ -168,7 +164,6 @@ joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace)
  * @param {Object} res 
  * @param {Function} next 
  */
-
 function signup(req, res, next) {
     let user = new User(req.body);
     user.save()
@@ -200,9 +195,9 @@ function signin(req, res, next) {
 }
 /**
  * render all the citeis or the sites
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next
  */
 function getHitsPlaceAtAll(req, res, next) {
     req.model.get()
@@ -213,9 +208,9 @@ function getHitsPlaceAtAll(req, res, next) {
 
 /**
  * render a city or a site based on Id
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+* @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next
  */
 function getHitsPlace(req, res, next) {
     console.log('rrrrrr', req.model);
@@ -228,9 +223,9 @@ function getHitsPlace(req, res, next) {
 
 /**
  * post a city, site or a review
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next
  */
 function postHistPlaces(req, res, next) {
     req.model.create(req.body)
@@ -242,9 +237,9 @@ function postHistPlaces(req, res, next) {
 
 /**
  * update info of  a city or a site based on Id
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+* @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next
  */
 function updateHitsPlace(req, res, next) {
     req.model.update(req.params.id, req.body)
@@ -255,9 +250,9 @@ function updateHitsPlace(req, res, next) {
 
 /**
  * delete a city or a site based on Id
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next
  */
 function deleteHitsPlace(req, res, next) {
     let message = 'deleted';

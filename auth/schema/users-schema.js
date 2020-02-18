@@ -29,10 +29,7 @@ User.pre('save', async function () {
     catch (e) {
         return Promise.reject();
     }
-
-
 })
-
 
 /**
  * A method related to the User schema that takes the user info when sign in,
