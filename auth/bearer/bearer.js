@@ -1,28 +1,26 @@
 'use strict ';
 
+/**
+ * REQUIRES
+ */
 const user = require('../schema/users-schema.js');
 
-module.exports = (req, res, next) => {
-    console.log('ttttttttttttttttt');
 
+/**
+ * Making sure that tha user informantion is exist in req.headers.authorization if not the user have to signup first 
+ * If req.headers.authorization is exist making sure from the name and the pass are the same as found in database 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next 
+ */
+module.exports = (req, res, next) => {
     if (!req.headers.authorization) {
         next('invalid log in');
     } 
         let token = req.headers.authorization.split(' ').pop();
-        console.log('token', token);
-
-    
     user.bearerAuth(token)
-
-
-    // console.log('uuuuuuuuuuuuu', token)
-
         .then(validUser => {
-            console.log('eeeeeeeeeeeeeeeeeeeee', validUser);
-
             req.user = validUser;
             next();
         }).catch(err => next(err));
-
-
 }

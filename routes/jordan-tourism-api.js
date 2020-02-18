@@ -3,14 +3,16 @@
 /***********************************************************************************************************************/
 
 /**
- * DE
+ * DEPENDENCIES
  */
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const joTourism = require('express').Router();
 
-
+/**
+ * REQUIRES
+ */
 const acl = require('../auth/acl/acl.js');
+const joTourism = require('express').Router();
 const User = require('../auth/schema/users-schema.js');
 const bearerAuth = require('../auth/bearer/bearer.js');
 const city = require('../models/classes/city_model.js');
@@ -19,8 +21,29 @@ const review = require('../models/classes/review_class.js');
 const historical = require('../models/classes/hist_model.js');
 
 
+
+
 /**
- * 
+ * sign up route => the user should add name and pass 
+ * the user not required to add email and role
+ * the admin should add the role
+ */
+joTourism.post('/signup', signup);
+
+/**
+ * sign in route => the user should add name and pass
+ */
+joTourism.post('/signin', basicMiddleware, signin);
+
+/**
+ * bearer route to make sure the user is signed in
+ */
+joTourism.get('/user', bearerAuth, (req, res) => {
+    res.status(200).json(req.user);
+})
+
+/**
+ * Making the city name in the route dynamic
  * @param {Object} req 
  * @param {Object} res 
  * @param {Function} next 
@@ -42,7 +65,7 @@ function dynamicCeties(req, res, next) {
 }
 
 /**
- * dynamicSites function : 
+ *   Making the site name in the route dynamic
  * @param {Object} req 
  * @param {Object} res 
  * @param {Function} next 
@@ -66,7 +89,7 @@ function dynamicSites(req, res, next) {
 
 
 /**
- * 
+ * Dynamic route
  * @param {Object} req 
  * @param {Object} res 
  * @param {Function} next 
@@ -88,50 +111,64 @@ function getModel(req, res, next) {
             next();
             return;
         default:
-            next('model not found'); // if we pass smth in the next, if u wrote ur error middleware correctly, it moves it to the error hanling 
+            next('NOT FOUND'); // if we pass smth in the next, if u wrote ur error middleware correctly, it moves it to the error hanling 
             return;
     }
 }
 
-
+/**
+ * Connect the dynamic models with the routes
+ */
 joTourism.param('model', getModel)
 joTourism.param('city', dynamicCeties)
 joTourism.param('hist', dynamicSites)
-joTourism.use(express.static('/public'));
+
+
+/**
+ * show all the cities or all the sites for all visitors
+ */
+joTourism.get('/:model', getHitsPlaceAtAll) 
+
+/**
+ * show one city or one site based on the name of the city and the id for all visitors
+ */
+joTourism.get('/:model/:city/:id', getHitsPlace)
+joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace) 
+
+
+/**
+ * to post a new city or site by the admin
+ */
+joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces) 
+
+/**
+ * to post a new review by admin or user
+ */
+joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces) 
+
+/**
+ * to update a city or site by admin
+ */
+joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace) 
+
+
+/**
+ * to delete city or site by admin
+ */
+joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace) 
 
 
 
-joTourism.get('/:model', getHitsPlaceAtAll) //// all citeis w/o virtuals
-joTourism.get('/:model', getHitsPlaceAtAll) //// all sites
-
-
-joTourism.get('/:model/:city/:id', getHitsPlace) /// one city with sites for all
-joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace) // one site for all``
-
-
-joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces) /// add a city for admin
-joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces) /// add a site for admin
-joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces) /// add a review for admin and user
-
-
-joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace) // update a city for admin
-joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace) // update a site for admin
-
-
-joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace) // delete a city for admin
-joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace) // delete a site for admin
-
-
-// signin /signup routes:
-joTourism.post('/signup', signup);
-joTourism.post('/signin', basicMiddleware, signin);
-joTourism.get('/user', bearerAuth, (req, res) => {
-    res.status(200).json(req.user);
-})
 
 
 
-// signin /signup functions:
+/**
+ * Signup function
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next 
+ */
+
 function signup(req, res, next) {
     let user = new User(req.body);
     user.save()
@@ -149,7 +186,12 @@ function signup(req, res, next) {
 }
 
 
-
+/**
+ * Sign in function
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next 
+ */
 function signin(req, res, next) {
     console.log(req.token);
     // res.status(200).send('successfully sign-in, your token is:  ')
@@ -157,16 +199,11 @@ function signin(req, res, next) {
 
 }
 /**
- * 
+ * render all the citeis or the sites
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
  */
-
-
-
-
-//CRUD functions
 function getHitsPlaceAtAll(req, res, next) {
     req.model.get()
         .then(output => {
@@ -174,7 +211,12 @@ function getHitsPlaceAtAll(req, res, next) {
         }).catch()
 }
 
-
+/**
+ * render a city or a site based on Id
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 function getHitsPlace(req, res, next) {
     console.log('rrrrrr', req.model);
 
@@ -184,7 +226,12 @@ function getHitsPlace(req, res, next) {
         }).catch(next)
 }
 
-
+/**
+ * post a city, site or a review
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 function postHistPlaces(req, res, next) {
     req.model.create(req.body)
         .then(data => {
@@ -193,7 +240,12 @@ function postHistPlaces(req, res, next) {
         .catch(next)
 }
 
-
+/**
+ * update info of  a city or a site based on Id
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 function updateHitsPlace(req, res, next) {
     req.model.update(req.params.id, req.body)
         .then(data => {
@@ -201,7 +253,12 @@ function updateHitsPlace(req, res, next) {
         }).catch(next);
 }
 
-
+/**
+ * delete a city or a site based on Id
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 function deleteHitsPlace(req, res, next) {
     let message = 'deleted';
     req.model.delete(req.params.id)
