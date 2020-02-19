@@ -7,40 +7,21 @@
  */
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const joTourism = require('express').Router();
 
 /**
  * REQUIRES
  */
 const acl = require('../auth/acl/acl.js');
-const joTourism = require('express').Router();
 const User = require('../auth/schema/users-schema.js');
 const bearerAuth = require('../auth/bearer/bearer.js');
 const city = require('../models/classes/city_model.js');
 const basicMiddleware = require('../auth/basic/basic.js');
 const review = require('../models/classes/review_class.js');
 const historical = require('../models/classes/hist_model.js');
+const faceOauthMiddleware = require('../auth/oauth/face-oauth-middleware.js');
 
 
-
-
-/**
- * sign up route => the user should add name and pass 
- * the user not required to add email and role
- * the admin should add the role
- */
-joTourism.post('/signup', signup);
-
-/**
- * sign in route => the user should add name and pass
- */
-joTourism.post('/signin', basicMiddleware, signin);
-
-/**
- * bearer route to make sure the user is signed in
- */
-joTourism.get('/user', bearerAuth, (req, res) => {
-    res.status(200).json(req.user);
-})
 
 /**
  * Making the city name in the route dynamic
@@ -125,6 +106,25 @@ joTourism.param('hist', dynamicSites)
 
 
 /**
+ * sign up route => the user should add name and pass 
+ * the user not required to add email and role
+ * the admin should add the role
+ */
+joTourism.post('/signup', signup);
+
+/**
+ * sign in route => the user should add name and pass
+ */
+joTourism.post('/signin', basicMiddleware, signin);
+
+/**
+ * bearer route to make sure the user is signed in
+ */
+joTourism.get('/user', bearerAuth, (req, res) => {
+    res.status(200).json(req.user);
+})
+
+/**
  * show all the cities or all the sites for all visitors
  */
 joTourism.get('/:model', getHitsPlaceAtAll)
@@ -135,6 +135,16 @@ joTourism.get('/:model', getHitsPlaceAtAll)
 joTourism.get('/:model/:city/:id', getHitsPlace)
 joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace)
 
+
+/**
+ * 
+ */
+joTourism.get('/oauth',faceOauthMiddleware, oauth);
+
+function oauth(req, res) {
+  console.log('token => ', req.token);
+  res.status(200).json('you successfully signed with facebook');
+}
 
 /**
  * to post a new city or site by the admin
