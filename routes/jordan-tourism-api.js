@@ -6,6 +6,8 @@ const historical = require('../models/classes/hist_model.js');
 const city = require('../models/classes/city_model.js');
 const User = require('../auth/schema/users-schema.js')
 const jwt =require('jsonwebtoken');
+const faceOuth = require('../auth/oauth/face-oauth-middleware.js');
+
 
 const basicMiddleware = require('../auth/basic/basic.js');
 
@@ -67,7 +69,10 @@ joTourism.delete('/site/:id', deleteHitsSite) // delete a site
 joTourism.post('/signup',signup);
 joTourism.post('/signin',basicMiddleware,signin);
 
-
+joTourism.get('/oauth',faceOuth,oauth);
+function oauth(req,res,next){
+    res.status(200).json(req.token);
+}
 // signin /signup functions:
 function signup(req,res,next){
 let user = new User(req.body);    
