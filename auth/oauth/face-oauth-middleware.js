@@ -18,7 +18,7 @@ let SECRET = process.env.SECRET || 'MYOWNSECRET';
 
 module.exports = async function authorize(req, res, next) {
   try {
-    // console.log('hello from authorize');
+    console.log('hello from authorize');
     let code = req.query.code;
     // console.log('req.query.code => ',req.query.code);
     let remoteToken = await codeTokenExchanger(code);

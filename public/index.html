@@ -14,7 +14,6 @@
   </section>
 </body>
 
-<!-- <script src="//connect.facebook.net/en_US/sdk.js"></script> -->
 <script>
 
   let FACEBOOK_App_ID = '520042838644247';
@@ -25,7 +24,7 @@
   let options = {
       client_id: FACEBOOK_App_ID,
       redirect_uri: 'http://localhost:3000/oauth',
-      scope: ['email', 'user_friends'].join(','), // comma seperated string
+      scope: ['email', 'user_friends'].join(','),
       response_type: 'code',
       // response_type: 'token',
       auth_type: 'rerequest',
