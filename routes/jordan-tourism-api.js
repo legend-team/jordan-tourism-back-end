@@ -92,14 +92,25 @@ function getModel(req, res, next) {
             next();
             return;
         default:
-            next('NOT FOUND'); // if we pass smth in the next, if u wrote ur error middleware correctly, it moves it to the error hanling 
+            next('Model NOT FOUND'); // if we pass smth in the next, if u wrote ur error middleware correctly, it moves it to the error hanling 
             return;
     }
 }
 
 /**
- * Connect the dynamic models with the routes
+ * 
  */
+
+function oauth(req, res) {
+  console.log('token => ', req.token);
+  res.status(200).json('you successfully signed with facebook');
+}
+
+/**
+ * Connect the dynamic models with the routes
+ * 
+ */
+
 joTourism.param('model', getModel)
 joTourism.param('city', dynamicCeties)
 joTourism.param('hist', dynamicSites)
@@ -124,6 +135,7 @@ joTourism.get('/user', bearerAuth, (req, res) => {
     res.status(200).json(req.user);
 })
 
+joTourism.get('/oauth',faceOauthMiddleware, oauth);
 /**
  * show all the cities or all the sites for all visitors
  */
@@ -136,15 +148,7 @@ joTourism.get('/:model/:city/:id', getHitsPlace)
 joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace)
 
 
-/**
- * 
- */
-joTourism.get('/oauth',faceOauthMiddleware, oauth);
 
-function oauth(req, res) {
-  console.log('token => ', req.token);
-  res.status(200).json('you successfully signed with facebook');
-}
 
 /**
  * to post a new city or site by the admin
