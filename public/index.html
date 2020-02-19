@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>lab12</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <section class="container">
+    <h1>API Server with OAuth Application</h1>
+    <div>one click to sign-in using your <span class="git">facebook</span> <span class="acc">Account</span> <a id="oauth" href="#"  >click here</a></div><!-- onClick="logInWithFacebook()" -->
+    
+  </section>
+</body>
+
+<!-- <script src="//connect.facebook.net/en_US/sdk.js"></script> -->
+<script>
+
+  let FACEBOOK_App_ID = '520042838644247';
+  let FACEBOOK_App_Secret = '672eea6cc59210a304c8239f1e6aa835';
+
+  let URL = 'https://www.facebook.com/v6.0/dialog/oauth';
+
+  let options = {
+      client_id: FACEBOOK_App_ID,
+      redirect_uri: 'http://localhost:3000/oauth',
+      scope: ['email', 'user_friends'].join(','), // comma seperated string
+      response_type: 'code',
+      // response_type: 'token',
+      auth_type: 'rerequest',
+      // display: 'popup',
+      // scope: 'read:user',
+      state: '401project'
+  } 
+
+  let QueryString = Object.keys(options).map(key => {
+      return `${key}=` + encodeURIComponent(options[key]);
+  }).join('&');
+
+  let authURL = `${URL}?${QueryString}`;
+
+  let link = document.getElementById('oauth');
+
+  link.setAttribute('href', authURL)  
+</script>
+
+</html>

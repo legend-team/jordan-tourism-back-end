@@ -1,41 +1,42 @@
+/* eslint-disable strict */
 'use strict ';
 
 const base64 = require('base-64');
-const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const userSchema = require('../schema/users-schema.js');
-const jwt =require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 
 
 
 function basicMiddleware(req,res,next){
-    console.log('req.headers.authorization :',req.headers.authorization);
-    if (!req.headers.authorization){
-        next('sign-up first');
-        return;
-    }
+  console.log('req.headers.authorization :',req.headers.authorization);
+  if (!req.headers.authorization){
+    next('sign-up first');
+    return;
+  }
 
-let basicCode = req.headers.authorization.split(' ').pop();
-console.log('basicCode',basicCode);
+  let basicCode = req.headers.authorization.split(' ').pop();
+  console.log('basicCode',basicCode);
 
-// console.log('basicCode',base64.decode(basicCode).split(':') );
-let [name, pass] = base64.decode(basicCode).split(':');
-// let auth = { name , pass}
-userSchema.authenticateUser(name , pass)
-.then(validUser=>{
-    console.log('validUser',validUser)
-    let user = {
+  // console.log('basicCode',base64.decode(basicCode).split(':') );
+  let [name, pass] = base64.decode(basicCode).split(':');
+  // let auth = { name , pass}
+  userSchema.authenticateUser(name , pass)
+    .then(validUser=>{
+      console.log('validUser',validUser)
+      let user = {
         id: validUser._id,
-        }
-        console.log('user.id',user.id)
-        req.token = jwt.sign(user,'ser123');
-        console.log('req.token',req.token);
-        next();  
-})
-.catch(err =>{
-    next('Invalid user error',err); 
+      }
+      console.log('user.id',user.id)
+      req.token = jwt.sign(user,'ser123');
+      console.log('req.token',req.token);
+      next();  
+    })
+    .catch(err =>{
+      next('Invalid user error',err); 
     // console.error()
-})
+    })
 
 
 
