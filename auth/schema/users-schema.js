@@ -68,6 +68,10 @@ User.statics.bearerAuth = async function (token) {
     }
 }
 
+// User.statics.list = async function () {
+//     let result = await this.find({});
+//     return result;
+// }
 
 /**
  * A method related to the User schema that takes the user role and copmare what the user want to do with the 

@@ -8,6 +8,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const joTourism = require('express').Router();
+// joTourism.get('/userList', getUser)
+
 
 /**
  * REQUIRES
@@ -102,8 +104,11 @@ function getModel(req, res, next) {
  */
 
 function oauth(req, res) {
-  console.log('token => ', req.token);
-  res.status(200).json('you successfully signed with facebook');
+    let response = {
+        status : 'you successfully signed with facebook',
+        token : req.token,
+      };
+      res.status(200).json(response);
 }
 
 /**
@@ -135,7 +140,7 @@ joTourism.get('/user', bearerAuth, (req, res) => {
     res.status(200).json(req.user);
 })
 
-joTourism.get('/oauth',faceOauthMiddleware, oauth);
+joTourism.get('/oauth', faceOauthMiddleware, oauth);
 /**
  * show all the cities or all the sites for all visitors
  */
@@ -153,23 +158,30 @@ joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace)
 /**
  * to post a new city or site by the admin
  */
-joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces)
+// joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces)
+joTourism.post('/:model', postHistPlaces)
+
 
 /**
  * to post a new review by admin or user
  */
-joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces)
+// joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces)
+joTourism.post('/:model', postHistPlaces)
+
 
 /**
  * to update a city or site by admin
  */
-joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace)
+// joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace)
+joTourism.put('/:model/:id', updateHitsPlace)
+
 
 
 /**
  * to delete city or site by admin
  */
-joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace);
+// joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace);
+joTourism.delete('/:model/:id',  deleteHitsPlace);
 
 
 /**
@@ -275,5 +287,14 @@ function deleteHitsPlace(req, res, next) {
             res.status(200).json(message)
         }).catch(next);
 }
+
+// function getUser(req,res,next){
+//     console.log('rrrrrrrrrr');
+    
+//     User.list()
+//     .then(data => {
+//         res.status(200).json(data)
+//     })
+// }
 
 module.exports = joTourism;

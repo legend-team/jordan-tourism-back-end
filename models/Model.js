@@ -10,10 +10,10 @@ class Model {
     }
     get(_id) {
         if (_id) {
-            return this.schema.findOne({ _id })
+            return this.schema.find({ _id })
         }
         else {
-            return this.schema.find({})
+            return this.schema.findOne()
         }
     }
     create(input) {

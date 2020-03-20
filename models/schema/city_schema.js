@@ -36,7 +36,7 @@ city.virtual('achistoricalPlaces', {
  * The two schemas connected throuth the city name in both of them.
  */
 
-city.pre('findOne', function () {
+city.pre('find', function () {
     try {
         this.populate('achistoricalPlaces');
     } catch (error) {

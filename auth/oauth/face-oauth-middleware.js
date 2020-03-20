@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
 /* eslint-disable strict */
-'use strict';
+
+
+'use strict ';
 require('dotenv').config();
 const superagent = require('superagent');
 // const axios = require('axios');
