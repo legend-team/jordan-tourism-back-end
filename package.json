@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/legend-team/jordan-tourism-back-end/issues"
   },
-  "homepage": "https://github.com/legend-team/jordan-tourism-back-end/",
+  "homepage": "/",
   "dependencies": {
     "@code-fellows/supergoose": "^1.0.1",
     "base-64": "^0.1.0",
