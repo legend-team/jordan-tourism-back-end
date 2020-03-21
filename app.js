@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 const server = require('./lib/server.js');
 
 
-const MONGOOSE_URI = 'mongodb://localhost:27017/joTourism'
+const MONGOOSE_URI = process.env.MONGOOSE_URI;
 const mongoose_option = {
     useNewUrlParser:true,
     useCreateIndex:true,

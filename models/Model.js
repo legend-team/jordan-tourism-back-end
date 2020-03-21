@@ -13,7 +13,7 @@ class Model {
             return this.schema.find({ _id })
         }
         else {
-            return this.schema.findOne()
+            return this.schema.find({})
         }
     }
     create(input) {
