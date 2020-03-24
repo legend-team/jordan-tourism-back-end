@@ -40,7 +40,7 @@ historicalPlace.virtual('reviews', {
 /**
  * The two schemas connected throuth the site name in both of them.
  */
-historicalPlace.pre('findOne', function () {
+historicalPlace.pre('find', function () {
     try {
         this.populate('reviews');
     } catch (err) {

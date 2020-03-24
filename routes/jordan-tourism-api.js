@@ -142,7 +142,7 @@ joTourism.get('/user', bearerAuth, (req, res) => {
 
 joTourism.get('/oauth', faceOauthMiddleware, oauth);
 /**
- * show all the cities or all the sites for all visitors
+ * show all the cities, all the sites or all reviews for all visitors
  */
 joTourism.get('/:model', getHitsPlaceAtAll)
 
@@ -151,6 +151,8 @@ joTourism.get('/:model', getHitsPlaceAtAll)
  */
 joTourism.get('/:model/:city/:id', getHitsPlace)
 joTourism.get('/:model/:city/:id/:hist/:id', getHitsPlace)
+// joTourism.get('/:model/:id', getHitsPlace)
+
 
 
 
@@ -239,7 +241,7 @@ function getHitsPlaceAtAll(req, res, next) {
  * @param {Function} next
  */
 function getHitsPlace(req, res, next) {
-    console.log('rrrrrr', req.model);
+    console.log('rrrrrr');
 
     req.model.get(req.params.id)
         .then(output => {
