@@ -1,4 +1,5 @@
-'use strict';
+/* eslint-disable camelcase */
+
 
 
 /**
@@ -12,18 +13,18 @@ const mongoose = require('mongoose');
 const server = require('./lib/server.js');
 
 
-const MONGOOSE_URI = 'mongodb+srv://muna:muna1234@back-end-api-cjvfu.mongodb.net/test?retryWrites=true&w=majority'
+// const MONGOOSE_URI = 'mongodb+srv://muna:muna1234@back-end-api-cjvfu.mongodb.net/test?retryWrites=true&w=majority'
 
 const mongoose_option = {
-    useNewUrlParser:true,
-    useCreateIndex:true,
-    useUnifiedTopology:true,
-}
+  useNewUrlParser:true,
+  useCreateIndex:true,
+  useUnifiedTopology:true,
+};
 
 
-mongoose.connect(MONGOOSE_URI,mongoose_option)
-.then(()=>{console.log('i am connected bruh')})
-.catch(e =>{console.error(e)})
+mongoose.connect(process.env.MONGOOSE_URI,mongoose_option)
+  .then(()=>{console.log('i am connected bruh');})
+  .catch(e =>{console.error(e);});
 
-server.start()
+server.start();
 
