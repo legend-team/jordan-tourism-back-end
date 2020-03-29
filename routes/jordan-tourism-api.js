@@ -156,6 +156,11 @@ joTourism.get('/:model/:id', getHitsPlace);
 
 
 
+/**
+ * to post a new review by admin or user
+ */
+joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces);
+// joTourism.post('/:model', postHistPlaces);
 
 /**
  * to post a new city or site by the admin
@@ -164,11 +169,6 @@ joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces);
 // joTourism.post('/:model', postHistPlaces);
 
 
-/**
- * to post a new review by admin or user
- */
-joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces);
-// joTourism.post('/:model', postHistPlaces);
 
 
 /**
