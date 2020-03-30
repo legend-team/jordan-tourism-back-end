@@ -55,7 +55,8 @@ function dynamicCeties(req, res, next) {
  */
 function dynamicSites(req, res, next) {
 
-  let sites = ['ummqais', 'southerntheate', 'bella', 'streetcolumns', 'nymphsway', 'artemis', 'kerakmoabcastle', 'َkarakcastl'];
+  let sites = [
+   'sites', 'Downtown','ummqais', 'southerntheate', 'bella', 'streetcolumns', 'nymphsway', 'artemis', 'kerakmoabcastle', 'َkarakcastl'];
 
   let hist = req.params.hist;
   for (let i = 0; i < sites.length; i++) {
@@ -159,14 +160,14 @@ joTourism.get('/:model/:id', getHitsPlace);
 /**
  * to post a new review by admin or user
  */
-joTourism.post('/:model', bearerAuth, acl('review'), postHistPlaces);
-// joTourism.post('/:model', postHistPlaces);
+// joTourism.post('/:model',acl('review'), postHistPlaces);
+joTourism.post('/:model', postHistPlaces);
 
 /**
  * to post a new city or site by the admin
  */
-joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces);
-// joTourism.post('/:model', postHistPlaces);
+// joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces);
+joTourism.post('/:model', postHistPlaces);
 
 
 
@@ -174,16 +175,16 @@ joTourism.post('/:model', bearerAuth, acl('create'), postHistPlaces);
 /**
  * to update a city or site by admin
  */
-joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace);
-// joTourism.put('/:model/:id', updateHitsPlace);
+// joTourism.put('/:model/:id', bearerAuth, acl('update'), updateHitsPlace);
+joTourism.put('/:model/:id', updateHitsPlace);
 
 
 
 /**
  * to delete city or site by admin
  */
-joTourism.delete('/:model/:id', bearerAuth, acl('delete'), deleteHitsPlace);
-// joTourism.delete('/:model/:id',  deleteHitsPlace);
+// joTourism.delete('/:model/:id', acl('delete'), deleteHitsPlace);
+joTourism.delete('/:model/:id',  deleteHitsPlace);
 
 
 /**

@@ -15,9 +15,11 @@ const user = require('../schema/users-schema.js');
  */
 module.exports = (req, res, next) => {
     if (!req.headers.authorization) {
+        console.log('')
         next('invalid log in');
     } 
-        let token = req.headers.authorization.split(' ').pop();
+     
+    let token = req.headers.authorization.split(' ').pop();
     user.bearerAuth(token)
         .then(validUser => {
             req.user = validUser;
