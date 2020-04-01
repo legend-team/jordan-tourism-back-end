@@ -32,7 +32,7 @@ const faceOauthMiddleware = require('../auth/oauth/face-oauth-middleware.js');
  * @param {Function} next
  */
 function dynamicCeties(req, res, next) {
-  let cities = ['ajloun', 'irbed', 'jarash', 'amman', 'zarqa', 'alkarak', 'alsalt'];
+  let cities = ['amman', 'irbed', 'zarqa', 'ajloun', 'tafilah', 'jarash', 'madaba','aqaba','maan','karak','al-salt'];
 
   let city = req.params.city;
   for (let i = 0; i < cities.length; i++) {
