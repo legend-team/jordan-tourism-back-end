@@ -57,7 +57,7 @@ function dynamicSites(req, res, next) {
 
   let sites = [
     'amman citadel (jebel al-qala’a)',  'al balad (downtown)','roman amphitheater of amman','qasr amrah','qasr al-hallabat','azraq wetland reserve',
-    'umm qais','southern theater','bella','ajloun castle','regep', 'list mosque','dana nature reserve',' al sila castle',' al ma’atan','street of columns',
+    'umm qais','southern theater','bella','ajloun castle','regep', 'list mosque','dana nature reserve','al sila castle','al ma’atan','street of columns',
     'rangers camp for adventure','dibbin nature reserve','karak castle','mazar islamic museum', 'karak castle plaza','as-salt archaeological museum',
     'al-hammam street','al-khader church','mount nebo','madaba museum','zarqa main','aqaba aquarium','ayla golf course and academy',
     'aqaba bird obervatory','petra','wadi rum',
