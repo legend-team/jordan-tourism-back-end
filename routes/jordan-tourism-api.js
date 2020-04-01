@@ -55,13 +55,13 @@ function dynamicCeties(req, res, next) {
  */
 function dynamicSites(req, res, next) {
 
-    let sites = [
-    "amman citadel (jebel al-qala’a)",  "al balad (downtown)","roman amphitheater of amman","qasr amrah","qasr al-hallabat","azraq wetland reserve",
-    "umm qais","southern theater","bella","ajloun castle","regep", "list mosque","dana nature reserve"," al sila castle"," al ma’atan","street of columns",
-    "rangers camp for adventure","dibbin nature reserve","karak castle","mazar islamic museum", "karak castle plaza","as-salt archaeological museum",
-    "al-hammam street","al-khader church","mount nebo","madaba museum","zarqa main","aqaba aquarium","ayla golf course and academy",
-    "aqaba bird obervatory","petra","wadi rum",
-    "shoubak","wadi mujib","royal air sport club"];
+  let sites = [
+    'amman citadel (jebel al-qala’a)',  'al balad (downtown)','roman amphitheater of amman','qasr amrah','qasr al-hallabat','azraq wetland reserve',
+    'umm qais','southern theater','bella','ajloun castle','regep', 'list mosque','dana nature reserve',' al sila castle',' al ma’atan','street of columns',
+    'rangers camp for adventure','dibbin nature reserve','karak castle','mazar islamic museum', 'karak castle plaza','as-salt archaeological museum',
+    'al-hammam street','al-khader church','mount nebo','madaba museum','zarqa main','aqaba aquarium','ayla golf course and academy',
+    'aqaba bird obervatory','petra','wadi rum',
+    'shoubak','wadi mujib','royal air sport club'];
   let hist = req.params.hist;
   for (let i = 0; i < sites.length; i++) {
     // console.log('eeeeeeeeeee', hist);
@@ -223,7 +223,7 @@ function signup(req, res, next) {
 function signin(req, res, next) {
   console.log(req.token);
   // res.status(200).send('successfully sign-in, your token is:  ')
-//   res.status(200).json(req.token);
+  //   res.status(200).json(req.token);
   res.status(200).send(req.token);
 
 
